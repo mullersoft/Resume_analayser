@@ -1,0 +1,38 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# VS Code settings
+.vscode/
+
+# Python test cache
+.pytest_cache/
+*.cover
+coverage.xml
+htmlcov/
+
+# MyPy
+.mypy_cache/
+
+# Environment files
+.env
+.env.*
+
+# Logs
+*.log
+
+# MacOS
+.DS_Store
+
+# Docker
+**/__pycache__/
+**/*.pyc
+docker-compose.override.yml
+
+

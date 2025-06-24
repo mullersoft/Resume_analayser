@@ -1,0 +1,208 @@
+{
+  "name": "Resume Analyzer",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "resume-upload",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "id": "4f22a3cc-1e93-4e5a-94b6-91e4e202d72b",
+      "name": "Receive Resume Upload",
+      "webhookId": "613408b1-12a5-4e33-a90a-347ae14395ab"
+    },
+    {
+      "parameters": {
+        "resource": "assistant",
+        "operation": "create",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-3.5-turbo",
+          "mode": "list",
+          "cachedResultName": "GPT-3.5-TURBO"
+        },
+        "name": "resume analyzer",
+        "description": "resume analyzer",
+        "instructions": "=Extract from the text:\n- full_name\n- email\n- phone\n- skills (as list)\n- years of experience\n- last job title\n\nReturn JSON:\n{\n  \"full_name\": \"\",\n  \"email\": \"\",\n  \"phone\": \"\",\n  \"skills\": [],\n  \"experience_years\": 0,\n  \"last_job_title\": \"\"\n}\n\nText:\n{{ $json[\"text\"] }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [220, 0],
+      "id": "24ad1eca-797f-4532-94fb-4e9192e5e058",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "izfJey9rRy4PjctE",
+          "name": "OpenAi account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schema": {
+          "__rl": true,
+          "mode": "list",
+          "value": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "resumes",
+          "mode": "list",
+          "cachedResultName": "resumes"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "full_name": "{{ $json[\"full_name\"] }}",
+            "email": "{{ $json[\"email\"] }}",
+            "phone": "{{ $json[\"phone\"] }}",
+            "experience_years": "={{ $json[\"experience_years\"] }}",
+            "last_job_title": "{{ $json[\"last_job_title\"] }}",
+            "filename": "{{ $json[\"filename\"] }}"
+          },
+          "matchingColumns": ["id"],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "filename",
+              "displayName": "filename",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "skills",
+              "displayName": "skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "array",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "experience_years",
+              "displayName": "experience_years",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_job_title",
+              "displayName": "last_job_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "uploaded_at",
+              "displayName": "uploaded_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [420, 0],
+      "id": "edb68308-8225-45d1-ba87-ad66d24c019d",
+      "name": "Postgres",
+      "credentials": {
+        "postgres": {
+          "id": "GNBHOF7q6zyXX6NX",
+          "name": "Postgres account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Receive Resume Upload": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Postgres",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "86db7c65-207d-4034-bbf2-10c5359fd3ea",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5c966af00fd4e40753ad285658c031f510386d1b6fecb348883dfd07a5d81a88"
+  },
+  "id": "SrN1YJ4qRzAVZzJX",
+  "tags": []
+}
