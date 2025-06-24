@@ -8,8 +8,6 @@ This is a resume analysis system that extracts structured information (name, ema
 - 🐘 **PostgreSQL** (data storage)
 - 🐳 **Docker Compose** (to run all services)
 
----
-
 ## 🚀 Features
 
 - Upload PDF resumes via FastAPI
@@ -21,5 +19,8 @@ This is a resume analysis system that extracts structured information (name, ema
 How to Run:
 docker-compose up --build
 
-To view in the DB:docker exec -it resume-analyzer-postgres-1 psql -U admin -d resumes
-tables:SELECT \* FROM resumes;
+To view in the DB:
+docker exec -it resume-analyzer-postgres-1 psql -U admin -d resumes
+
+to view tables:
+SELECT \* FROM resumes;
